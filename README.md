@@ -1,10 +1,10 @@
-# WanderLust - Airbnb Clone
+# DreamyDestiny - Airbnb Clone
 
 A full-stack listing app inspired by Airbnb, built with Express, MongoDB, EJS, and Bootstrap.
 
 ## Overview
 
-WanderLust is a CRUD-based rental listing platform where users can:
+DreamyDestiny is a CRUD-based rental listing platform where users can:
 
 - Browse all listings
 - View individual listing details
