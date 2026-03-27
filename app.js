@@ -7,6 +7,7 @@ const  listing=require("./models/listing.js")
 const ejsmate=require("ejs-mate")
 const wrapAsync=require("./utils/wrapAsync.js");
 const ExpressError=require("./utils/ExpressError.js");
+const {listingSchema}=require("./schema.js")
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -32,6 +33,17 @@ async function main() {
     
 }
 
+
+const validateListing=(res,req,next)=>{
+     let result=listingSchema.validate(req.body);
+   if(error)
+   {
+    let errMsg=error.details.map((el)=>el.message).join(",");
+    throw new ExpressError(400,result.error)
+   }else{
+    next()
+   }
+}
 app.get("/listing", wrapAsync(async(req,res,next)=>{
 
     let alllisting=  await listing.find();
@@ -41,19 +53,20 @@ app.get("/listing", wrapAsync(async(req,res,next)=>{
    
    
 }))
-app.get("/listing/:id/show", async(req,res)=>{
+app.get("/listing/:id/show", wrapAsync(async(req,res)=>{
     let {id}=req.params
    let list=  await listing.findById(id);
     res.render("listing/show.ejs",{list});
     
-})
+}))
 
 app.get("/listing/new", (req,res)=>{
     
     
     res.render("listing/new.ejs")
 })
-app.post("/listing/new", async(req,res)=>{
+app.post("/listing/new", validateListing,wrapAsync(async(req,res)=>{
+  
     const {title,description,image,price,country,location}=req.body;
     let listing1=new listing({
     title:title,
@@ -67,30 +80,31 @@ app.post("/listing/new", async(req,res)=>{
  await listing1.save().then((result)=>{
     res.redirect("/listing")
     
-})})
+})}))
 
 
 
-app.get("/listing/:id/edit",async (req,res)=>{
+app.get("/listing/:id/edit", wrapAsync(async (req,res)=>{
     let {id}=req.params
    let list=  await listing.findById(id);
     res.render("listing/edit.ejs",{list});
-})
+}))
 
-app.put("/listing/:id/edit",async (req,res)=>{
+app.put("/listing/:id/edit",validateListing,wrapAsync(async (req,res)=>{
+   
      let {id}=req.params;
      await listing.findByIdAndUpdate(id,{...req.body.listing})
      res.redirect(`/listing/${id}/show`)
     
-})
-app.delete("/listing/:id/delete",async(req,res)=>{
+}))
+app.delete("/listing/:id/delete",wrapAsync(async(req,res)=>{
  let {id}=req.params;
 
  let del= await listing.findByIdAndDelete(id);
 res.redirect("/listing")
 console.log(del)
 
-})
+}))
 app.get("/",(req,res)=>{
     res.redirect("/listing")
 })
@@ -102,7 +116,8 @@ app.use((req, res, next) => {
 // Error handler
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong" } = err;
-  res.status(statusCode).send(message);
+  res.render("error.ejs",{err})
+//   res.status(statusCode).send(message);
 });
 
 
