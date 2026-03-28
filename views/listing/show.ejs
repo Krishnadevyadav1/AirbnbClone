@@ -2,14 +2,14 @@
 
     <div class="row mt-3">
       <div class="col-8 offset-4">
-        <h3>Listing Details</h3>
+        <h4><b><%=list.title%></b><br></h4>
       </div>
 
       <div class="card col-6 offset-4" style="width: 18rem;">
         <img src="<%=list.image.url%>" class="card-img-top show-img" alt="...">
         <div class="card-body">
           <p class="card-text">
-            <b><%=list.title%></b><br>
+            
             <%=list.description%><br>
             &#8377;
            <% if(list.price==null){%>
@@ -32,6 +32,22 @@
         
          <form method="post"  action="/listing/<%=list._id%>/delete?_method=delete"><button class="btn btn-dark  offset-6">delete</button></form></div><br>
       </div>
+
+      <div class="col-8 offset-3  mb-3">
+        <hr>
+        <h4>Leave a Review</h4>
+        <form action="/listings/<%=list.id%>/reviews" method="POST">
+        <div class="mb mt-3">
+          <label class="form-label" for="rating">Rate us</label>
+          <input class="form-range" id="rating" type="range" min="1" max="5" name="review[rating]">
+        </div>
+        <div class="mb mt-3">
+          <label  for="comment">Comment</label>
+          <textarea cols="30" rows="5" class="form-control" id="comment" name="review[comment]"></textarea>
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Submit</button>
+      </div>
+      </form>
     </div>
 
 

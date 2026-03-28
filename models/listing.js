@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const mogoose=require("mongoose");
-
+const{Schema}=mongoose
 
 const listingSchema= new mongoose.Schema({
     title:{type:String,
@@ -21,6 +21,10 @@ const listingSchema= new mongoose.Schema({
     price:Number,
     location:String,
     country:String,
+    reviews:[{
+      type:Schema.Types.ObjectId,
+      ref:"review"
+    }]
 });
 
 const listing= mongoose.model("listing",listingSchema);

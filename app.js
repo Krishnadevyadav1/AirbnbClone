@@ -3,16 +3,18 @@ const app=express();
 const path=require("path");
 const mongoose=require("mongoose");
 const ejs=require("ejs");
-const  listing=require("./models/listing.js")
+const  listing =require("./models/listing.js")
 const ejsmate=require("ejs-mate")
 const wrapAsync=require("./utils/wrapAsync.js");
 const ExpressError=require("./utils/ExpressError.js");
 const {listingSchema}=require("./schema.js")
+const  reviews=require("./models/reviews.js")
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
 const methodOverride=require("method-override");
+
 app.use(methodOverride("_method"));
 app.engine("ejs",ejsmate);
 app.use(express.static(path.join(__dirname,"/public")));
@@ -105,6 +107,17 @@ res.redirect("/listing")
 console.log(del)
 
 }))
+
+app.post("/listings/:id/reviews",async(req,res)=>{
+    
+    let listings= await listing.findById(req.params.id);
+    let newreview=new reviews(req.body.review)
+    listings.reviews.push(newreview)
+
+    await newreview.save()
+    await listings.save()
+ res.send("reviews send")
+})
 app.get("/",(req,res)=>{
     res.redirect("/listing")
 })
