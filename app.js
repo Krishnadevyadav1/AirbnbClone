@@ -2,7 +2,8 @@ const express=require("express");
 const app=express();
 const path=require("path");
 const mongoose=require("mongoose");
-const ejs=require("ejs");
+const session = require('express-session')
+const flash=require("connect-flash")
 
 const ejsmate=require("ejs-mate")
 
@@ -22,6 +23,18 @@ app.engine("ejs",ejsmate);
 app.use(express.static(path.join(__dirname,"/public")));
 
 
+const sessionOptions={
+    secret:"mysupersecretcode",
+    resave:false,
+    saveUninitialised :true,
+    cookie:{
+   expires:Date.now()*7*24*60*60*1000,
+   maxAge:7*24*60*60*1000,
+   httpOnly:true,     
+    }
+};
+
+
 
 
 const mangooseUrl="mongodb://127.0.0.1:27017/wanderlust";
@@ -36,18 +49,25 @@ async function main() {
     await mongoose.connect(mangooseUrl);
     
 }
+app.get("/",(req,res)=>{
+    res.redirect("/listing")
+})
 
+app.use(session(sessionOptions));
+app.use(flash())
 
-
+app.use((req,res,next)=>{
+    res.locals.success=req.flash("success");
+    res.locals.error=req.flash("error");
+    next();
+})
 
 
 app.use("/listing",listings)
 
 app.use("/listing/:id/reviews",review)
 
-app.get("/",(req,res)=>{
-    res.redirect("/listing")
-})
+
 // Catch-all route
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page not found"));
