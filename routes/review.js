@@ -1,8 +1,7 @@
 const express=require("express");
 const router=express.Router({mergeParams:true});
 const wrapAsync=require("../utils/wrapAsync.js");
-const ExpressError=require("../utils/ExpressError.js");
-const {reviewschema}=require("../schema.js")
+const{validatereview,isLoggedIn,isReviewAuthor}=require("../middleware.js")
 const  listing =require("../models/listing.js")
 const  reviews=require("../models/reviews.js")
 
@@ -11,25 +10,14 @@ const  reviews=require("../models/reviews.js")
 
 
 
-const validatereview=(req,res,next)=>{
-     let result=reviewschema.validate(req.body);
-     
-   if(result.error)
-   {
-    let errMsg=result.error.details.map((el)=>el.message).join(",");
-    
-    throw new ExpressError(400,errMsg)
-   }else{
-    next()
-   }
-}
 
-router.post("/",validatereview, wrapAsync(async(req,res)=>{
+
+router.post("/",isLoggedIn,validatereview, wrapAsync(async(req,res)=>{
     
     let listings= await listing.findById(req.params.id);
     let newreview=new reviews(req.body.reviews)
+    newreview.author=req.user._id
     listings.reviews.push(newreview)
-
     await newreview.save()
     await listings.save()
     req.flash("success","New review created!")
@@ -37,7 +25,7 @@ router.post("/",validatereview, wrapAsync(async(req,res)=>{
  res.redirect(`/listing/${listings._id}/show`)
 }))
 
-router.delete("/:reviewid",wrapAsync(async(req,res)=>
+router.delete("/:reviewid",isLoggedIn,isReviewAuthor, wrapAsync(async(req,res)=>
 {
     const {id,reviewid}=req.params;
     console.log(id)
