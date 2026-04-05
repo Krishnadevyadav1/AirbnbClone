@@ -14,6 +14,7 @@ const User=require("./models/user.js")
 const user=require("./routes/user.js")
 
 
+
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
@@ -67,6 +68,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
     res.locals.error=req.flash("error");
+    res.locals.currUser=req.user
     next();
 })
 
