@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const mogoose=require("mongoose");
-
+const{Schema}=mongoose
 
 const reviewsSchema=mongoose.Schema({
     comment:String,
@@ -12,7 +12,12 @@ const reviewsSchema=mongoose.Schema({
     createdat:{type:Date,
         default:Date.now(),
 
-    }
+    },
+     author:{
+      type:Schema.Types.ObjectId,
+      ref:"User",
+
+    },
 })
 
 module.exports=mongoose.model("review",reviewsSchema);
