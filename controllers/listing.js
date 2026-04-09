@@ -33,8 +33,11 @@ module.exports.newRoute=(req, res) => {
 }
 
 module.exports.newPostRoute=async (req, res) => {
+    let url=req.file.path;
+    let filename=req.file.filename;
     let listing1 = new listing(req.body.listing);
     listing1.owner = req.user._id
+    listing1.image={url,filename}
     await listing1.save().then((result) => {
         req.flash("success", "New listing created!")
         res.redirect("/listing")
@@ -50,7 +53,11 @@ module.exports.getEdit=async (req, res) => {
         req.flash("error", " listing doesn't exist!")
         res.redirect("/listing")
     }
-    else { res.render("listing/edit.ejs", { list })}; 
+
+    let originalimg=list.image.url;
+    originalimg=originalimg.replace("/upload","/upload/h_300,w_250")
+
+     res.render("listing/edit.ejs", { list ,originalimg}); 
     
 
 }
@@ -59,8 +66,12 @@ module.exports.postEdit=async (req, res) => {
 
     let { id } = req.params;
 
-    await listing.findByIdAndUpdate(id, { ...req.body.listing })
-    
+   let listing2= await listing.findByIdAndUpdate(id, { ...req.body.listing })
+   if(typeof req.file!="undefined"){
+     let url=req.file.path;
+    let filename=req.file.filename;
+     listing2.image={url,filename}
+     await listing2.save();}
     req.flash("success", "listing  updated!")
     res.redirect(`/listing/${id}/show`)
   

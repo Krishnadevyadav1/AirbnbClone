@@ -13,10 +13,7 @@ const listingSchema= new mongoose.Schema({
     
    image: {
   filename: String,
-  url: {
-    type: String,
-    default: 'https://i2.wp.com/theluxuryeditor.com/wp-content/uploads/2019/03/154872166.jpg?resize=940%2C627&ssl=1'
-  }
+  url:String,
 }
     ,
     price:Number,
