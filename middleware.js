@@ -25,8 +25,12 @@ module.exports.isOwner=async(req,res,next)=>{
    
     let {id}=req.params;
         let li= await listing.findById(id);
+        if(!li){
+          req.flash("error","listing doesn't exist")
+          return res.redirect("/listing")
+        }
     
-        if(! li.owner._id.equals(res.locals.currUser._id))
+        if(!li.owner.equals(res.locals.currUser._id))
         {
           req.flash("error","you are not authorized ")
            return res.redirect(`/listing/${id}/show`)
@@ -64,8 +68,12 @@ module.exports.isReviewAuthor=async(req,res,next)=>{
    
     let {id,reviewid}=req.params;
         let reviews= await review.findById(reviewid);
+        if(!reviews){
+          req.flash("error","review doesn't exist")
+          return res.redirect(`/listing/${id}/show`)
+        }
     
-        if(! reviews.author._id.equals(res.locals.currUser._id))
+        if(!reviews.author.equals(res.locals.currUser._id))
         {
           req.flash("error","you are not authorized ")
            return res.redirect(`/listing/${id}/show`)
