@@ -1,3 +1,9 @@
+if(process.env.NODE_ENV !="production")
+{
+require('dotenv').config()
+}
+
+
 const express=require("express");
 const app=express();
 const path=require("path");
@@ -29,9 +35,9 @@ app.use(express.static(path.join(__dirname,"/public")));
 const sessionOptions={
     secret:"mysupersecretcode",
     resave:false,
-    saveUninitialised :true,
+    saveUninitialized :true,
     cookie:{
-   expires:Date.now()*7*24*60*60*1000,
+   expires:Date.now()+7*24*60*60*1000,
    maxAge:7*24*60*60*1000,
    httpOnly:true,     
     }
