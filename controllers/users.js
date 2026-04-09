@@ -3,7 +3,7 @@ module.exports.userSignup=(req,res)=>{
 res.render("users/signup.ejs")
 }
 
-module.exports.postUserSignup=async(req,res)=>{
+module.exports.postUserSignup=async(req,res,next)=>{
     
     try{const{username,email,password }=req.body;
     const nuser= new User({email,username})
@@ -11,7 +11,7 @@ module.exports.postUserSignup=async(req,res)=>{
    req.login(reguser,(err)=>{
         if(err)
         {
-            next(err)
+            return next(err)
         }
          req.flash("success","Registration Successful!")
    
