@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 
 const sessionOptions={
-    secret:"mysupersecretcode",
+    secret:process.env.SESSION_SECRET || "mysupersecretcode",
     resave:false,
     saveUninitialized :true,
     cookie:{
@@ -103,7 +103,7 @@ app.use((req, res, next) => {
 // Error handler
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong" } = err;
-  res.render("error.ejs",{err})
+  res.status(statusCode).render("error.ejs",{err})
 //   res.status(statusCode).send(message);
 });
 
