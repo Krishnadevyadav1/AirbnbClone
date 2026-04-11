@@ -16,8 +16,134 @@ body{
     color: #fe424d;
     font-size: 2rem;
 }
+.brand-name{
+    color: #fe424d;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1;
+}
 .nav-link{
     color: #222222 !important;
+}
+.nav-shell{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.nav-search-pill{
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #dddddd;
+    border-radius: 999px;
+    padding: 0.4rem 0.4rem 0.4rem 1.1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    min-height: 3.2rem;
+}
+.search-item{
+    text-decoration: none;
+    color: #222222;
+    font-weight: 600;
+    padding: 0 0.9rem;
+}
+.search-item:hover{
+    color: #222222;
+}
+.divider{
+    width: 1px;
+    height: 1.6rem;
+    background-color: #dddddd;
+}
+.search-btn{
+    border: none;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background-color: #ff385c;
+    color: white;
+}
+.nav-actions{
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.host-link{
+    text-decoration: none;
+    color: #222222;
+    font-weight: 600;
+}
+.host-link:hover{
+    color: #222222;
+}
+.icon-btn{
+    border: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: #f2f2f2;
+    color: #222222;
+}
+.menu-wrap{
+    position: relative;
+}
+.menu-dropdown{
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    min-width: 11rem;
+    background-color: #fff;
+    border: 1px solid #dddddd;
+    border-radius: 0.8rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    padding: 0.4rem;
+    display: none;
+    z-index: 1200;
+}
+.menu-dropdown.show{
+    display: block;
+}
+.menu-dropdown a{
+    display: block;
+    text-decoration: none;
+    color: #222222;
+    padding: 0.6rem 0.7rem;
+    border-radius: 0.6rem;
+    font-weight: 600;
+}
+.menu-dropdown a:hover{
+    background-color: #f6f6f6;
+}
+@media (max-width: 992px){
+    .navbar{
+        height: auto;
+        padding: 0.75rem 0;
+    }
+    .nav-shell{
+        flex-wrap: wrap;
+    }
+    .nav-search-pill{
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .search-item{
+        font-size: 0.95rem;
+        padding: 0 0.4rem;
+    }
+}
+@media (max-width: 640px){
+    .brand-name{
+        display: none;
+    }
+    .host-link{
+        display: none;
+    }
+    .search-item:nth-child(3),
+    .search-item:nth-child(5),
+    .nav-search-pill .divider:nth-child(4){
+        display: none;
+    }
 }
 .f-info-links a{
     text-decoration: none;
@@ -88,3 +214,5 @@ body{
 {
     display: flex;
 }
+
+
