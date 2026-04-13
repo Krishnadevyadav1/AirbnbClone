@@ -8,6 +8,7 @@ const express=require("express");
 const app=express();
 const path=require("path");
 const mongoose=require("mongoose");
+const {MongoStore} = require('connect-mongo');
 const session = require('express-session')
 const flash=require("connect-flash")
 const ejsmate=require("ejs-mate")
@@ -30,10 +31,21 @@ const methodOverride=require("method-override");
 app.use(methodOverride("_method"));
 app.engine("ejs",ejsmate);
 app.use(express.static(path.join(__dirname,"/public")));
-
+const dbUrl=process.env.ATLASDB_URL
+const store=MongoStore.create({
+    mongoUrl:dbUrl,
+    crypto:{
+        secret:process.env.SECRET,
+    },
+    touchAfter:24*3600,
+})
+store.on("error",()=>{
+    console.log("error in store session ",err)
+})
 
 const sessionOptions={
-    secret:process.env.SESSION_SECRET || "mysupersecretcode",
+    store,
+    secret:process.env.SESSION_SECRET || process.env.SECRET,
     resave:false,
     saveUninitialized :true,
     cookie:{
@@ -46,7 +58,7 @@ const sessionOptions={
 
 
 
-const mangooseUrl="mongodb://127.0.0.1:27017/wanderlust";
+// const mangooseUrl="mongodb://127.0.0.1:27017/wanderlust";
 main().then(()=>{
     console.log("connected")
 })
@@ -55,7 +67,7 @@ main().then(()=>{
 })
 
 async function main() {
-    await mongoose.connect(mangooseUrl);
+    await mongoose.connect(dbUrl);
     
 }
 app.get("/",(req,res)=>{
