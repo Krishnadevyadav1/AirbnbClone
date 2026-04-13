@@ -1,18 +1,25 @@
-# DreamyDestiny - Airbnb Clone
+# DreamyDestiny (Airbnb Clone)
 
-A full-stack listing app inspired by Airbnb, built with Express, MongoDB, EJS, and Bootstrap.
+DreamyDestiny is a full-stack Airbnb-style listing platform built with Node.js, Express, MongoDB, EJS, and Bootstrap.
 
-## Overview
+Users can sign up, log in, create listings with image uploads, add reviews, and view listing locations on a map.
 
-DreamyDestiny is a CRUD-based rental listing platform where users can:
+## Live Demo
 
-- Browse all listings
-- View individual listing details
-- Create a new listing
-- Edit an existing listing
-- Delete a listing
+https://airbnbclone-qn59.onrender.com
 
-The app uses server-side rendering with EJS and stores data in MongoDB with Mongoose.
+## Features
+
+- User authentication (signup, login, logout) with Passport Local
+- Create, read, update, delete listings
+- Listing ownership authorization (only owner can edit/delete)
+- Image uploads via Multer + Cloudinary
+- Reviews with rating + comments
+- Review author authorization (only author can delete)
+- Server-side validation using Joi
+- Flash messages for success/error feedback
+- Location geocoding via LocationIQ API
+- Map view on listing detail page using MapLibre
 
 ## Tech Stack
 
@@ -20,95 +27,108 @@ The app uses server-side rendering with EJS and stores data in MongoDB with Mong
 - Express.js
 - MongoDB + Mongoose
 - EJS + EJS-Mate
+- Passport + passport-local-mongoose
+- Express Session + connect-mongo
+- Multer + Cloudinary
+- Joi
 - Bootstrap 5
-- Method-Override
-
-## Features
-
-- REST-style listing routes with clean page navigation
-- Form validation styling using Bootstrap validation classes
-- Reusable layout with navbar + footer partials
-- Seed script with sample listing data
-- Custom error class + centralized error handler
 
 ## Project Structure
 
 ```text
 airbnbclone/
 |- app.js
-|- package.json
+|- middleware.js
+|- schema.js
+|- cloudConfig.js
+|- controllers/
+|  |- listing.js
+|  |- reviews.js
+|  |- users.js
+|- routes/
+|  |- listing.js
+|  |- review.js
+|  |- user.js
 |- models/
 |  |- listing.js
+|  |- reviews.js
+|  |- user.js
 |- init/
 |  |- index.js
 |  |- data.js
-|- utils/
-|  |- ExpressError.js
-|  |- wrapAsync.js
-|- public/
-|  |- css/style.css
-|  |- js/script.js
 |- views/
-|  |- layouts/boilerplate.ejs
-|  |- includes/navbar.ejs
-|  |- includes/footer.ejs
-|  |- listing/
-|     |- index.ejs
-|     |- show.ejs
-|     |- new.ejs
-|     |- edit.ejs
+|- public/
+|- utils/
 ```
 
-## Getting Started
+## Environment Variables
 
-### 1. Clone and install dependencies
+Create a `.env` file in the project root:
+
+```env
+ATLASDB_URL=your_mongodb_connection_string
+SESSION_SECRET=your_session_secret
+CLOUD_NAME=your_cloudinary_cloud_name
+CLOUD_API_KEY=your_cloudinary_api_key
+CLOUD_API_SECRET=your_cloudinary_api_secret
+FORWARD_GEO=your_locationiq_api_key
+```
+
+## Installation
 
 ```bash
-git clone <your-repo-url>
-cd airbnbclone
 npm install
 ```
 
-### 2. Start MongoDB locally
-
-Make sure MongoDB is running on:
-
-```text
-mongodb://127.0.0.1:27017/wanderlust
-```
-
-### 3. Seed sample data (optional)
-
-```bash
-node init/index.js
-```
-
-### 4. Run the app
+## Run the App
 
 ```bash
 node app.js
 ```
 
-Open in browser:
+App runs at:
 
 ```text
 http://localhost:8080
 ```
 
-## Routes
+## Seed Sample Data (Optional)
 
-| Method | Route | Purpose |
-|---|---|---|
-| GET | `/` | Redirect to listings |
-| GET | `/listing` | Show all listings |
-| GET | `/listing/new` | New listing form |
-| POST | `/listing/new` | Create listing |
-| GET | `/listing/:id/show` | Listing details |
-| GET | `/listing/:id/edit` | Edit form |
-| PUT | `/listing/:id/edit` | Update listing |
-| DELETE | `/listing/:id/delete` | Delete listing |
+The seed script uses local MongoDB (`mongodb://127.0.0.1:27017/wanderlust`) as configured in `init/index.js`.
 
+```bash
+node init/index.js
+```
 
+## Main Routes
+
+### Listing Routes
+
+- `GET /listing` - all listings
+- `GET /listing/new` - create form
+- `POST /listing/new` - create listing
+- `GET /listing/:id/show` - listing details
+- `GET /listing/:id/edit` - edit form
+- `PUT /listing/:id/edit` - update listing
+- `DELETE /listing/:id/delete` - delete listing
+
+### Review Routes
+
+- `POST /listing/:id/reviews` - add review
+- `DELETE /listing/:id/reviews/:reviewid` - delete review
+
+### Auth Routes
+
+- `GET /signup` - signup form
+- `POST /signup` - register user
+- `GET /login` - login form
+- `POST /login` - login user
+- `GET /logout` - logout user
+
+## Notes
+
+- Keep `.env` private and never commit secrets.
+- For Atlas-based deployment, ensure your MongoDB URL includes the intended database name.
 
 ## Author
 
