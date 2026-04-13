@@ -58,7 +58,7 @@ const sessionOptions={
 
 
 
-// const mangooseUrl="mongodb://127.0.0.1:27017/wanderlust";
+
 main().then(()=>{
     console.log("connected")
 })
